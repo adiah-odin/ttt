@@ -20,10 +20,13 @@ const GameBoard = (() => {
   // square should be a tuple of 2 coordinates
   const makeMove = (square, player) => {
     // If the square is not empty then return
-    if (_board[square[0]][square[1]].getValue() != null) return;
+    if (_board[square[0]][square[1]].getValue() != null) {
+      return 1;
+    }
 
     // Otherwise the valid square.
     _board[square[0]][square[1]].addToken(player);
+    return 0;
   };
 
   const printBoard = () => {
@@ -87,13 +90,16 @@ const GameController = ((
   const playRound = (square) => {
     // Add token for the current player
     console.log(`Adding ${getActivePlayer().name}'s token to square ${square}`);
-    GameBoard.makeMove(square, getActivePlayer().token);
+    if (GameBoard.makeMove(square, getActivePlayer().token) === 0) {
+      // Check for winner
 
-    // Check for winner
-
-    // Switch player turn
-    _switchPlayerTurn();
-    _printNewRound();
+      // Switch player turn
+      _switchPlayerTurn();
+      _printNewRound();
+    } else {
+      console.log(`Invalid square`);
+      _printNewRound();
+    }
   };
 
   // Initial play game message
