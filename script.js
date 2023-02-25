@@ -34,6 +34,20 @@ const GameBoard = (() => {
     return 0;
   };
 
+  //   const availableSquares = _board.filter(
+  //     (square) => square.getValue() === null
+  //   );
+
+  const availableSquares = () => {
+    let count = 0;
+    for (let i = 0; i < 9; i++) {
+      if (_board[i].getValue() === null) {
+        count++;
+      }
+    }
+    return count;
+  };
+
   const printBoard = () => {
     // Convert the 1D array into a 2D array for printing
     const oneDBoard = [..._board];
@@ -48,6 +62,7 @@ const GameBoard = (() => {
   };
 
   return {
+    availableSquares,
     getBoard,
     makeMove,
     printBoard,
@@ -140,6 +155,9 @@ const GameController = ((
       // Check for winner
       if (_checkWinner()) {
         console.log(`Winner: ${getActivePlayer()}.`);
+      } else if (GameBoard.availableSquares() === 0) {
+        // check if the board is full
+        console.log(`Draw`);
       } else {
         // Switch player turn
         _switchPlayerTurn();
