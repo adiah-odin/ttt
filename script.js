@@ -179,3 +179,5 @@ const GameController = ((
     getBoard: GameBoard.getBoard,
   };
 })();
+
+const ScreenController = (() => {})();
