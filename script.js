@@ -180,4 +180,48 @@ const GameController = ((
   };
 })();
 
-const ScreenController = (() => {})();
+const ScreenController = (() => {
+  const playerTurnDiv = document.querySelector(".turn");
+  const boardDiv = document.querySelector(".board");
+
+  const _updateScreen = () => {
+    // clear the board
+    boardDiv.textContent = "";
+
+    // Get newest version of board and player turn
+    const _board = GameController.getBoard();
+    const _activePlayer = GameController.getActivePlayer();
+
+    // Display player's turn
+    playerTurnDiv.textContent = `${_activePlayer.name}'s turn...`;
+
+    // Render board squares
+    _board.forEach((square, index) => {
+      // const cellButton = document.createElement("button");
+      const cellButton = document.createElement("div");
+      cellButton.classList.add("cell", "grid-cell");
+
+      cellButton.dataset.value = index;
+      cellButton.textContent = square.getValue();
+      boardDiv.appendChild(cellButton);
+    });
+  };
+
+  // Add event listener for the board
+  function clickHandlerBoard(e) {
+    const selectedSquare = e.target.dataset.value;
+
+    // Ensure a column is selected, not the gaps between
+    if (!selectedSquare) return;
+
+    GameController.playRound(selectedSquare);
+    _updateScreen();
+  }
+
+  boardDiv.addEventListener("click", clickHandlerBoard);
+
+  // Initial render
+  _updateScreen();
+
+  // Nothing is returned
+})();
