@@ -249,6 +249,7 @@ const ScreenController = (() => {
     _roundResult = GameController.playRound(selectedSquare);
     _updateScreen();
     if (_roundResult.gameState === "draw") {
+      document.querySelector(".turn").classList.add("hidden");
       document.querySelector(".game-over").classList.add("visible");
       document.querySelector(".game-over-text").textContent = "Draw!";
     } else if (_roundResult.gameState === "win") {
@@ -256,6 +257,7 @@ const ScreenController = (() => {
         .querySelectorAll(".grid-cell")
         .forEach((cell) => cell.classList.add("disabled"));
 
+      document.querySelector(".turn").classList.add("hidden");
       document.querySelector(".game-over").classList.add("visible");
       document.querySelector(
         ".game-over-text"
@@ -268,6 +270,7 @@ const ScreenController = (() => {
   // Handle restart button click
   document.querySelector(".restart").addEventListener("click", () => {
     document.querySelector(".game-over").classList.remove("visible");
+    document.querySelector(".turn").classList.remove("hidden");
     GameController.restart();
     _updateScreen();
   });

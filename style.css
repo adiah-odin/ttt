@@ -1,8 +1,16 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 .board {
-  position: absolute;
+  /* position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); */
   display: grid;
   grid-template-columns: repeat(3, auto);
 }
@@ -71,4 +79,8 @@
 
 .visible {
   display: block;
+}
+
+.hidden {
+  display: none;
 }
