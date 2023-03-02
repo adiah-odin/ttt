@@ -14,11 +14,15 @@ const GameBoard = (() => {
   //     }
   //   }
 
-  // Use a 1D array instead
-  for (let i = 0; i < 9; i++) {
-    _board.push(Cell());
-  }
+  const resetBoard = () => {
+    _board.splice(0, 9);
+    // Use a 1D array instead
+    for (let i = 0; i < 9; i++) {
+      _board.push(Cell());
+    }
+  };
 
+  resetBoard();
   const getBoard = () => _board;
 
   // add an x or o to a square, depending on the player
@@ -66,6 +70,7 @@ const GameBoard = (() => {
     getBoard,
     makeMove,
     printBoard,
+    resetBoard,
   };
 })();
 
@@ -184,11 +189,17 @@ const GameController = ((
   // Initial play game message
   _printNewRound();
 
+  const restart = () => {
+    GameBoard.resetBoard();
+    _activePlayer = _players[0];
+  };
+
   return {
     playRound,
     getActivePlayer,
     //  Don't know if I need this.
     getBoard: GameBoard.getBoard,
+    restart,
   };
 })();
 
@@ -257,7 +268,8 @@ const ScreenController = (() => {
   // Handle restart button click
   document.querySelector(".restart").addEventListener("click", () => {
     document.querySelector(".game-over").classList.remove("visible");
-    // GameController.restart();
+    GameController.restart();
+    _updateScreen();
   });
 
   // Initial render
