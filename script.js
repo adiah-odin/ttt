@@ -155,13 +155,25 @@ const GameController = ((
       // Check for winner
       if (_checkWinner()) {
         console.log(`Winner: ${getActivePlayer()}.`);
+        return {
+          gameState: "win",
+          winner: getActivePlayer().token,
+        };
       } else if (GameBoard.availableSquares() === 0) {
         // check if the board is full
         console.log(`Draw`);
+        return {
+          gameState: "draw",
+          winner: null,
+        };
       } else {
         // Switch player turn
         _switchPlayerTurn();
         _printNewRound();
+        return {
+          gameState: "ongoing",
+          winner: null,
+        };
       }
     } else {
       console.log(`Invalid square`);
@@ -198,11 +210,17 @@ const ScreenController = (() => {
     // Render board squares
     _board.forEach((square, index) => {
       // const cellButton = document.createElement("button");
+      const _cellValue = square.getValue();
+
       const cellButton = document.createElement("div");
-      cellButton.classList.add("cell", "grid-cell");
+      cellButton.classList.add("cell", "grid-cell", _cellValue);
+
+      if (_cellValue != null) {
+        cellButton.classList.add("disabled");
+      }
 
       cellButton.dataset.value = index;
-      cellButton.textContent = square.getValue();
+      // cellButton.textContent = _cellValue;
       boardDiv.appendChild(cellButton);
     });
   };
@@ -214,11 +232,33 @@ const ScreenController = (() => {
     // Ensure a column is selected, not the gaps between
     if (!selectedSquare) return;
 
-    GameController.playRound(selectedSquare);
+    // GameController.playRound(selectedSquare);
+    // _updateScreen();
+
+    _roundResult = GameController.playRound(selectedSquare);
     _updateScreen();
+    if (_roundResult.gameState === "draw") {
+      document.querySelector(".game-over").classList.add("visible");
+      document.querySelector(".game-over-text").textContent = "Draw!";
+    } else if (_roundResult.gameState === "win") {
+      document
+        .querySelectorAll(".grid-cell")
+        .forEach((cell) => cell.classList.add("disabled"));
+
+      document.querySelector(".game-over").classList.add("visible");
+      document.querySelector(
+        ".game-over-text"
+      ).textContent = `${_roundResult.winner.toUpperCase()} wins!`;
+    }
   }
 
   boardDiv.addEventListener("click", clickHandlerBoard);
+
+  // Handle restart button click
+  document.querySelector(".restart").addEventListener("click", () => {
+    document.querySelector(".game-over").classList.remove("visible");
+    // GameController.restart();
+  });
 
   // Initial render
   _updateScreen();
